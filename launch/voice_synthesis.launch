@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="intel_ros" name="voice_synthesis" type="voice_synthesis" output="screen"/>
+</launch>

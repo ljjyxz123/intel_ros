@@ -1,0 +1,13 @@
+0,command,speech,response
+1,test,test,"Test ok, I heard!"
+2,stop,stop,OK
+3,stop,halt,OK
+4,stop,abort,OK
+5,stop,shut down,OK
+6,forward,forward,forward
+7,backward,back,back
+8,rotate left,rotate left,rotate left
+9,rotate right,rotate right,rotate right
+10,turn left,turn left,turn left
+11,turn right,turn right,turn right
+12,follow me,follow me,I will follow you
