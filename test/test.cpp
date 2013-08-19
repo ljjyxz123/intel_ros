@@ -12,13 +12,12 @@
 #include "util_pipeline.h"
 
 using namespace std;
-int _tmain(int argc, _TCHAR* argv[])
+
+void foo1()
 {
-
-
 	PXCSession *session;
 	PXCSession_Create(&session);
-	
+
 	// session is a PXCSession instance
 	PXCSession::ImplDesc desc1;
 	memset(&desc1,0,sizeof(desc1));
@@ -27,8 +26,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	vector<std::wstring> deviceNames;
 	for (int m=0;;m++) {
- 		PXCSession::ImplDesc desc2;
- 		if (session->QueryImpl(&desc1,m,&desc2)<PXC_STATUS_NO_ERROR) break;
+		PXCSession::ImplDesc desc2;
+		if (session->QueryImpl(&desc1,m,&desc2)<PXC_STATUS_NO_ERROR) break;
 
 		PXCSmartPtr<PXCCapture> capture;
 		if (session->CreateImpl<PXCCapture>(&desc2,&capture)<PXC_STATUS_NO_ERROR) continue;
@@ -64,11 +63,105 @@ int _tmain(int argc, _TCHAR* argv[])
 	else
 	{
 		wprintf_s(L"No audio device founded!");
-		return -1;
+		return;
 	}
 
 	session->Release();
 	system("pause");
+}
+
+void foo2()
+{
+	//UtilRender render(L"Color Stream");
+	UtilPipeline *pp=0;
+
+	pp=new UtilPipeline();
+	//pp->QueryCapture()->SetFilter(GetCheckedDevice(hwndDlg));
+
+	pp->EnableGesture();
+
+	std::string gesturePendding;
+	long msec = 0; // mm secs
+	// Init
+	if (pp->Init()) {
+		while(true)
+		{
+			if (!pp->AcquireFrame(true)) break;
+			PXCGesture *gesture=pp->QueryGesture();
+			PXCImage *depth=pp->QueryImage(PXCImage::IMAGE_TYPE_DEPTH);
+
+			PXCGesture::Gesture gestures[2]={0};
+			gesture->QueryGestureData(0,PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY,0,&gestures[0]);
+			gesture->QueryGestureData(0,PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY,0,&gestures[1]);
+
+			std::string gestureCommand;
+			switch (gestures[0].label)
+			{
+			case PXCGesture::Gesture::LABEL_POSE_THUMB_UP:
+				gestureCommand = "stop";
+				break;
+			case PXCGesture::Gesture::LABEL_POSE_THUMB_DOWN:
+				gestureCommand = "stop";
+				break;
+			case PXCGesture::Gesture::LABEL_POSE_PEACE:
+				gestureCommand = "follow me";
+				break;
+			case PXCGesture::Gesture::LABEL_POSE_BIG5:
+				gestureCommand = "stop";
+				break;
+			case PXCGesture::Gesture::LABEL_HAND_WAVE:
+				gestureCommand = "hello";
+				break;
+			case PXCGesture::Gesture::LABEL_HAND_CIRCLE:
+				gestureCommand = "LABEL_HAND_CIRCLE";
+				break;
+			case PXCGesture::Gesture::LABEL_NAV_SWIPE_LEFT:
+				gestureCommand = "turn left";
+				break;
+			case PXCGesture::Gesture::LABEL_NAV_SWIPE_RIGHT:
+				gestureCommand = "turn right";
+				break;
+			case PXCGesture::Gesture::LABEL_NAV_SWIPE_UP:
+				gestureCommand = "faster";
+				break;
+			case PXCGesture::Gesture::LABEL_NAV_SWIPE_DOWN:
+				gestureCommand = "slower";
+				break;
+			default:
+				gestureCommand = "NONE";
+				break;
+			}
+			if(gestureCommand != "NONE")
+			{
+				printf("Gesture recognized: [%s]", gestureCommand.c_str());
+
+				long tmsec = clock();
+				cout << tmsec << endl;
+
+				// Only the gesture is different from last recognized gesture in 2 seconds over the time interval will be processed
+				if (gestureCommand != gesturePendding && tmsec - msec > 2000)
+				{
+					std_msgs::String gestureMsg;
+					gestureMsg.data = gestureCommand;
+					printf("Gesture pub command: [%s]", gestureCommand.c_str());
+					msec = tmsec;
+					gesturePendding = gestureCommand;
+				}
+			}
+
+			//render.RenderFrame(depth);
+			pp->ReleaseFrame();
+		}
+	}
+
+	pp->Close();
+	pp->Release();
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+
+	foo2();
 	return 0;
 }
 

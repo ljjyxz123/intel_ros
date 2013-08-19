@@ -24,9 +24,6 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MyGestureRecognition.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -35,7 +32,34 @@
     <ClCompile Include="gesture_recognition.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MyGestureRecognition.cpp">
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_capture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_capture_file.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_captureimpl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_pipeline_face.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_pipeline_gesture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_pipeline_voice.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_pipeline_raw.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_render.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/sample/common/src/util_pipeline_segmentation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PCSDK_DIR)/src/libpxc/libpxc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

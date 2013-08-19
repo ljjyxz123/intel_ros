@@ -14,7 +14,7 @@ public:
 
 	RosSpeaker(void)
 	{
-		pub = n.advertise<std_msgs::String>("voice_syn", 20);
+		pub = n.advertise<std_msgs::String>("voice_syn", 100);
 	}
 
 	~RosSpeaker(void){}
@@ -27,7 +27,7 @@ public:
 		ss << sentence;
 		msg.data = ss.str();
 		pub.publish(msg);
-		ROS_INFO("Speaker: [%s]", msg.data.c_str());
+		//ROS_INFO("Speaker: [%s]", msg.data.c_str());
 	}
 
 	void speak(const wchar_t* sentence)

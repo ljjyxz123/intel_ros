@@ -13,7 +13,7 @@ MyVoiceSynthesis speaker;
 
 void speakerCallback(const std_msgs::String::ConstPtr& msg)
 {
-	ROS_INFO("Received: [%s]", msg->data.c_str());
+	ROS_INFO("Voice response: [%s]", msg->data.c_str());
 	speaker.speak(msg->data);
 }
 

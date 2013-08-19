@@ -3,17 +3,17 @@
 
 #include "stdafx.h"
 #include <iostream>
-#include "MyGestureRecognition.h"
 
 // Ros includes
 #include <ros/ros.h>
+#include "util_pipeline.h"
 #include "std_msgs/String.h"
 
 int _tmain(int argc, char** argv)
 {
 	ros::init(argc, argv, "intel_gesture_recognizer");
 	ros::NodeHandle node;
-	ros::Publisher gestureRecPub = node.advertise<std_msgs::String>("/recognizer/output", 1000);
+	ros::Publisher gestureRecPub = node.advertise<std_msgs::String>("/recognizer/output", 100);
 	ros::Rate loop_rate(10); // pub rate at 20Hz
 
 	//UtilRender render(L"Color Stream");
@@ -24,14 +24,15 @@ int _tmain(int argc, char** argv)
 
 	pp->EnableGesture();
 
-	/* Init */
+	long msec = 0; // mm secs
+	// Init
 	if (pp->Init()) {
 		while(ros::ok())
 		{
 			if (!pp->AcquireFrame(true)) break;
 			PXCGesture *gesture=pp->QueryGesture();
 			PXCImage *depth=pp->QueryImage(PXCImage::IMAGE_TYPE_DEPTH);
-			
+
 			PXCGesture::Gesture gestures[2]={0};
 			gesture->QueryGestureData(0,PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY,0,&gestures[0]);
 			gesture->QueryGestureData(0,PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY,0,&gestures[1]);
@@ -40,7 +41,7 @@ int _tmain(int argc, char** argv)
 			switch (gestures[0].label)
 			{
 			case PXCGesture::Gesture::LABEL_POSE_THUMB_UP:
-				gestureCommand = "follow me";
+				gestureCommand = "stop";
 				break;
 			case PXCGesture::Gesture::LABEL_POSE_THUMB_DOWN:
 				gestureCommand = "stop";
@@ -52,16 +53,16 @@ int _tmain(int argc, char** argv)
 				gestureCommand = "stop";
 				break;
 			case PXCGesture::Gesture::LABEL_HAND_WAVE:
-				gestureCommand = "LABEL_HAND_WAVE";
+				gestureCommand = "hello";
 				break;
 			case PXCGesture::Gesture::LABEL_HAND_CIRCLE:
 				gestureCommand = "LABEL_HAND_CIRCLE";
 				break;
 			case PXCGesture::Gesture::LABEL_NAV_SWIPE_LEFT:
-				gestureCommand = "turn left";
+				gestureCommand = "turn right";
 				break;
 			case PXCGesture::Gesture::LABEL_NAV_SWIPE_RIGHT:
-				gestureCommand = "turn right";
+				gestureCommand = "turn left";
 				break;
 			case PXCGesture::Gesture::LABEL_NAV_SWIPE_UP:
 				gestureCommand = "faster";
@@ -75,26 +76,32 @@ int _tmain(int argc, char** argv)
 			}
 			if(gestureCommand != "NONE")
 			{
-				ROS_INFO(gestureCommand.c_str());
-				//std::cout << gestureCommand.c_str() << std::endl;
+				ROS_INFO("Gesture recognized: [%s]", gestureCommand.c_str());
+				
+				long tmsec = clock(); // get program running time: mm seconds
+
+				// Only the gesture is different from last recognized gesture in 2 seconds over the time interval will be processed
+				if (tmsec - msec > 2000)
+				{
+					std_msgs::String gestureMsg;
+					gestureMsg.data = gestureCommand;
+					gestureRecPub.publish(gestureMsg);
+					ROS_INFO("Gesture pub command: [%s]", gestureCommand.c_str());
+					msec = tmsec;
+				}
 			}
-			
+
 			//render.RenderFrame(depth);
 			pp->ReleaseFrame();
-
-			std_msgs::String gestureMsg;
-			gestureMsg.data = gestureCommand;
-			gestureRecPub.publish(gestureMsg);
 			loop_rate.sleep();
 		}
-		
 	}
 
 	pp->Close();
 	pp->Release();
 
-// 	MyGestureRecognition pipeline;
-// 	pipeline.LoopFrames();
+	// 	MyGestureRecognition pipeline;
+	// 	pipeline.LoopFrames();
 	return 0;
 }
 

@@ -38,11 +38,11 @@ void PXCAPI MyVoiceRecognition::OnRecognized(PXCVoiceRecognition::Recognition *d
 	}
 	std::string command = voiceCmds.cmds[label].command;
 	std::string speech = voiceCmds.cmds[label].speech;
-	ROS_INFO("Recognizer: speach [%s] label [%d] command [%s]", speech.c_str(), label, command.c_str());
+	ROS_INFO("Voice recognized: speach [%s] command [%s]", speech.c_str(), command.c_str());
 	std_msgs::String msg;
 	msg.data = command;
 	voiceRecPub.publish(msg);
-	rosSpeaker.speak(voiceCmds.cmds[data->label].response.c_str());
+	//rosSpeaker.speak(voiceCmds.cmds[data->label].response.c_str());
 }
 
 void  PXCAPI MyVoiceRecognition::OnAlert(PXCVoiceRecognition::Alert *data)
@@ -62,7 +62,7 @@ void  PXCAPI MyVoiceRecognition::OnAlert(PXCVoiceRecognition::Alert *data)
 		alert = "Unknown!";
 		break;
 	}
-	ROS_INFO("Unrecognized label [%d], [%s]", data->label, alert.c_str());
+	ROS_INFO("Voice unrecognized: [%s]", alert.c_str());
 	//rosSpeaker.speak(alert.c_str());
 }
 
