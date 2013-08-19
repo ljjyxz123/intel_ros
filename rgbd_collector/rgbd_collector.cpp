@@ -31,6 +31,12 @@ int _tmain(int argc, char** argv)
 		rate = 5;
 	}
 	ROS_INFO("Set rate to [%d]", rate);
+	bool viewImage = true;
+	if (!node.getParam("rgbd_collector/viewImage", viewImage))
+	{
+		ROS_WARN("Param [%s] not found.", "rgbd_collector/viewImage");
+	}
+	ROS_INFO("Set rate to [%d]", viewImage ? "true" : "false");
 	ros::Publisher depthPub = node.advertise<sensor_msgs::Image>("/camera/depth/image_raw", 100);
 	ros::Publisher rgbPub = node.advertise<sensor_msgs::Image>("/camera/rgb/image_raw", 100);
 	ros::Publisher depthCameraInfoPub = node.advertise<sensor_msgs::CameraInfo>("/camera/depth/camera_info", 100);
@@ -96,8 +102,11 @@ int _tmain(int argc, char** argv)
 		pPxcRgbImg->ReleaseAccess(&pxcRgbData);
 		pPxcDepthImg->ReleaseAccess(&pxcDepthData);
 
-		if (!intelRgbRender.RenderFrame(pPxcRgbImg)) break;
-		if (!intelDepthRender.RenderFrame(pPxcDepthImg)) break;
+		if (viewImage)
+		{
+			if (!intelRgbRender.RenderFrame(pPxcRgbImg)) break;
+			if (!intelDepthRender.RenderFrame(pPxcDepthImg)) break;
+		}
 		pp.ReleaseFrame();
 
 		// Ros pub

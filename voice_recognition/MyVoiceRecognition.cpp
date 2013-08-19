@@ -39,10 +39,34 @@ void PXCAPI MyVoiceRecognition::OnRecognized(PXCVoiceRecognition::Recognition *d
 	std::string command = voiceCmds.cmds[label].command;
 	std::string speech = voiceCmds.cmds[label].speech;
 	ROS_INFO("Voice recognized: speach [%s] command [%s]", speech.c_str(), command.c_str());
-	std_msgs::String msg;
-	msg.data = command;
-	voiceRecPub.publish(msg);
-	//rosSpeaker.speak(voiceCmds.cmds[data->label].response.c_str());
+	if ("time" == command)
+	{
+		time_t t;
+		tm* local;
+		tm* gmt;
+		char buf[128]= {0};
+		t = time(NULL);
+		local = localtime(&t);
+		gmt = gmtime(&t);
+		strftime(buf, 128, "Current time is %X", gmt);
+		rosSpeaker.speak(buf);
+	}
+	else if ("date" == command)
+	{
+		time_t t;
+		tm* gmt;
+		char buf[128]= {0};
+		t = time(NULL);
+		gmt = gmtime(&t);
+		strftime(buf, 128, "Current date is %x", gmt);
+		rosSpeaker.speak(buf);
+	}
+	else
+	{
+		std_msgs::String msg;
+		msg.data = command;
+		voiceRecPub.publish(msg);
+	}
 }
 
 void  PXCAPI MyVoiceRecognition::OnAlert(PXCVoiceRecognition::Alert *data)

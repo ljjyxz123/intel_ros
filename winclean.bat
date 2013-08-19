@@ -13,6 +13,3 @@ rd /s /q voice_recognition\Debug
 rd /s /q voice_recognition\Release
 rd /s /q voice_synthesis\Debug
 rd /s /q voice_synthesis\Release
-rd /s /q test\Debug
-rd /s /q test\Release
-

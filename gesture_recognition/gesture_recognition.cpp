@@ -14,7 +14,7 @@ int _tmain(int argc, char** argv)
 	ros::init(argc, argv, "intel_gesture_recognizer");
 	ros::NodeHandle node;
 	ros::Publisher gestureRecPub = node.advertise<std_msgs::String>("/recognizer/output", 100);
-	ros::Rate loop_rate(10); // pub rate at 20Hz
+	ros::Rate loop_rate(10); // pub rate at 10Hz
 
 	//UtilRender render(L"Color Stream");
 	UtilPipeline *pp=0;
@@ -27,6 +27,7 @@ int _tmain(int argc, char** argv)
 	long msec = 0; // mm secs
 	// Init
 	if (pp->Init()) {
+		ROS_INFO("Gesture recognition system start!");
 		while(ros::ok())
 		{
 			if (!pp->AcquireFrame(true)) break;
