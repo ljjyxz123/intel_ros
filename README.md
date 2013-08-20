@@ -103,16 +103,66 @@ If you want to compile our code, you must select "Release" config to compile it.
 
 ####3.5.1. Create ROS Workspaces
 
-You may refer to [4. Create a ROS Workspace](http://www.ros.org/wiki/ROS/Tutorials/InstallingandConfiguringROSEnvironment) (http://www.ros.org/wiki/ROS/Tutorials/InstallingandConfiguringROSEnvironment) or just follow the steps below.
-
-> mkdir -p ~/catkin_ws/src  
-> cd ~/catkin_ws/src  
-> catkin_init_workspace  
+You may refer to [4. Create a ROS Workspace](http://www.ros.org/wiki/ROS/Tutorials/InstallingandConfiguringROSEnvironment) (http://www.ros.org/wiki/ROS/Tutorials/InstallingandConfiguringROSEnvironment) to create catkin workspace and rosbuild workspace. (two workspaces are needed)
 
 ####3.5.2. Overlaying
-You may refer to [Overlaying with catkin workspaces](http://www.ros.org/wiki/catkin/Tutorials/workspace_overlaying) (http://www.ros.org/wiki/catkin/Tutorials/workspace_overlaying) or just follow the steps below.
+
+You may refer to [Overlaying with catkin workspaces](http://www.ros.org/wiki/catkin/Tutorials/workspace_overlaying) (http://www.ros.org/wiki/catkin/Tutorials/workspace_overlaying) to overly the rosbuild workspace to catkin workspace.
 
 ####3.5.3. Config ROS networking
 
+In Ubuntu, open a terminal, `gedit ~/.bashrc` to edit .bashrc file, add `export ROS_MASTER_URI=http://YOUR_WINDOWS_IP:11311/` and `export ROS_IP=YOUR_UBUNTU_IP`. (Note: replace YOUR_WINDOWS_IP and 
+YOUR_UBUNTU_IP by the two IPs I mentioned above in 3.3.1.)
+
 ###3.6. Compile our intel_ros_vm packages
 
+Put our intel_ros_vm packages into catkin workspace ("~/catkin_ws/src/" you created it in 3.5.1.), and compile it with:
+
+> cd ~/catkin_ws/  
+> catkin_make
+
+###3.7. Install the prerequisites packages for intel_ros_vm 
+
+Standard ros packages
+
+> sudo apt-get install ros-groovy-turtlebot* ros-groovy-control \  
+> ros-groovy-openni-camera ros-groovy-openni-launch \  
+> ros-groovy-openni-tracker ros-groovy-laser-drivers \  
+> ros-groovy-audio-common ros-groovy-joystick-drivers \  
+> ros-groovy-orocos-kinematics-dynamics \  
+> ros-groovy-dynamixel-motor gstreamer0.10-pocketsphinx \    
+> python-setuptools ros-groovy-opencv2 ros-groovy-vision-opencv \  
+> ros-groovy-depthimage-to-laserscan ros-groovy-arbotix \  
+> git subversion mercurial
+
+Rbx robot package
+
+> cd ~/fuerte_workspace/sandbox  
+> git clone https://github.com/pirobot/rbx1.git  
+> cd rbx1  
+> rosmake  
+
+###3.8. Run our applications in simulated robot
+
+In Windows, go to "C:\opt\ros\fuerte\x86" folder, click "env.bat" to start a winRosed console, input "roscore" to start the rosmaster.
+
+Wait the rosmaster stated (It will display "started core service [/rosout]"), then...
+
+In Windows, open another "env.bat" console, input "roslaunch intel_ros intel_ros.launch" to start our apps.
+Our apps will ask you to select a voice input device, when we use real robot to test our code, we need use blutooth to input our voice, for reduce the noise interference from the the robot.
+
+In Ubuntu, open a terminal, and input ```roslaunch rbx1_bringup fake_turtlebot.launch & rosrun rviz rviz -d `rospack find rbx1_nav`/sim.rviz``` to start the simulated robot.
+
+In Ubuntu, open another terminal, and input "roslaunch intel_ros_vm intel_ros_vm.launch" to start our apps.
+
+Then, you'll view a simulated robot, and you can use voice and gesture to control the robot. The voice command list can be viewed in "intel_ros/common/commands.csv"
+
+###3.9. Run our applications in real robot
+
+The steps are quit similar with the simulated robot steps.
+
+But, you need not input ```roslaunch rbx1_bringup fake_turtlebot.launch & rosrun rviz rviz -d `rospack find rbx1_nav`/sim.rviz``` to start a simulated robot. Instead, you should:
+
+Connect with the real robot with usb-ttl cable, and then, in Ubuntu, input "roslaunch rbx1_bringup turtlebot_minimal_create.launch" to drive the real robot.
+
+Then, enjoy the real robot with intel depth camera.
