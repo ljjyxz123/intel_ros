@@ -1,6 +1,0 @@
-<launch>
-  <include file="$(find intel_ros)/launch/voice_synthesis.launch" />
-  <include file="$(find intel_ros)/launch/voice_recognition.launch" />
-  <include file="$(find intel_ros)/launch/gesture_recognition.launch" />
-  <include file="$(find intel_ros)/launch/rgbd_collector.launch" />
-</launch>

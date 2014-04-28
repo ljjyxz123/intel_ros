@@ -1,6 +1,0 @@
-<launch>
-  <node pkg="intel_ros" name="rgbd_collector" type="rgbd_collector" output="log">
-    <param name="rate" type="int" value="10" />
-    <param name="viewImage" type="bool" value="false" />
-  </node>
-</launch>

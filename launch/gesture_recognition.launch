@@ -1,3 +1,0 @@
-<launch>
-  <node pkg="intel_ros" name="gesture_recognition" type="gesture_recognition" output="screen"/>
-</launch>
