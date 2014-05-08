@@ -39,12 +39,12 @@
     <ClInclude Include="..\common\PXCUtility.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\VoiceCommands.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="VoiceRecognitionNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="VoiceRecognition.cpp">

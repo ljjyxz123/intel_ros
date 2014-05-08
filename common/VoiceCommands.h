@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <direct.h>
+#include <atlbase.h>
 
 class VoiceCommand
 {
@@ -60,8 +61,12 @@ public:
 			parser >> cmd.id >> cmd.command >> cmd.speech >> cmd.response;
 			
 			// save cmd into cmds
-			cmds.push_back(cmd);
-
+			if (cmd.id > -1)
+			{
+				cmds.push_back(cmd);
+			}
+			else continue;
+			
 			cout << "Loaded: [" << cmd.id << "] [" << cmd.command << "] [" << cmd.speech << "] [" << cmd.response << "]" << endl;
 		}
 		infile.close();
@@ -73,7 +78,7 @@ public:
 		wcmds.reserve(cmds.size());
 		for (vector<VoiceCommand>::iterator iter = cmds.begin(); iter != cmds.end(); iter++)
 		{
-			std::wstring wcmd(iter->speech.begin(), iter->speech.end());
+			std::wstring wcmd(ATL::CA2W(iter->speech.c_str()));
 			wcmds.push_back(wcmd);
 		}
 		

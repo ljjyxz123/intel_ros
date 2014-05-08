@@ -32,12 +32,12 @@ pxcCHAR* PXCUtility::AlertToString(PXCVoiceRecognition::Alert::Label label)
 {
 	switch (label)
 	{
-	case PXCVoiceRecognition::Alert::LABEL_SNR_LOW: return L"SNR_LOW";
-	case PXCVoiceRecognition::Alert::LABEL_SPEECH_UNRECOGNIZABLE: return L"SPEECH_UNRECOGNIZABLE";
-	case PXCVoiceRecognition::Alert::LABEL_VOLUME_HIGH: return L"VOLUME_HIGH";
-	case PXCVoiceRecognition::Alert::LABEL_VOLUME_LOW: return L"VOLUME_LOW";
+	case PXCVoiceRecognition::Alert::LABEL_SNR_LOW: return L"SNR low!";
+	case PXCVoiceRecognition::Alert::LABEL_SPEECH_UNRECOGNIZABLE: return L"Speech unrecognizable!";
+	case PXCVoiceRecognition::Alert::LABEL_VOLUME_HIGH: return L"Volume too high!";
+	case PXCVoiceRecognition::Alert::LABEL_VOLUME_LOW: return L"Volume too low!";
 	}
-	return L"UNKNOWN";
+	return L"Unknown!";
 }
 
 void PXCUtility::initLists()

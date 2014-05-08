@@ -36,7 +36,7 @@ int _tmain(int argc, char** argv)
 {
 	ros::init(argc, argv, "speaker");
 	ros::NodeHandle node;
-	ros::Subscriber sub = node.subscribe("voice_synthesis", 1, speakerCallback);
+	ros::Subscriber sub = node.subscribe("voice_synthesis", 10, speakerCallback);
 	
 	pxcCHAR* sentence = L"语音合成系统 启动成功！";
 	speaker = new MyVoiceSynthesis();

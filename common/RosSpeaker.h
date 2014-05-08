@@ -5,13 +5,23 @@
 
 class RosSpeaker
 {
-public:
-	ros::NodeHandle n;
-	ros::Publisher pub;
-
-	RosSpeaker(void)
+private:
+	ros::NodeHandle node_;
+	ros::Publisher pub_;
+	void init()
 	{
-		pub = n.advertise<std_msgs::String>("voice_synthesis", 1);
+		pub_ = node_.advertise<std_msgs::String>("voice_synthesis", 10);
+	}
+
+public:
+	RosSpeaker(const ros::NodeHandle initNode) : node_(initNode)
+	{
+		init();
+	}
+
+	RosSpeaker()
+	{
+		init();
 	}
 
 	~RosSpeaker(void){}
@@ -23,8 +33,8 @@ public:
 		std::stringstream ss;
 		ss << sentence;
 		msg.data = ss.str();
-		pub.publish(msg);
-		//ROS_INFO("Speaker: [%s]", msg.data.c_str());
+		pub_.publish(msg);
+		ROS_INFO("Speaker: [%s]", msg.data.c_str());
 	}
 
 	void speak(const wchar_t* sentence)
@@ -33,4 +43,3 @@ public:
 		speak(csentence);
 	}
 };
-
