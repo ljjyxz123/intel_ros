@@ -1,0 +1,14 @@
+<!-- Yuanbo She, 2013.8.15 -->
+<launch>
+  <node pkg="intel_ros" name="vel_center" type="vel_center" output="screen" >
+    <param name="minLinear" type="double" value="0.03" />
+    <param name="minAngular" type="double" value="0.05" />
+    <param name="maxLinear" type="double" value="0.5" />
+    <param name="maxAngular" type="double" value="3.0" />
+    <!-- default 0.25 -->
+    <param name="accelerateLinear" type="double" value="0.5" />
+    <!-- default 1 -->
+    <param name="accelerateAngular" type="double" value="2" />
+    <param name="rate" type="int" value="10" />
+  </node>
+</launch>
