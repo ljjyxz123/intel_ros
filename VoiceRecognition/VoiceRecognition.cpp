@@ -138,12 +138,14 @@ int _tmain(int argc, char** argv)
 	ros::init(argc, argv, "voice_recognition");
 	ros::NodeHandle node;
 	std::string path;
-	node.param<std::string>("cmd_csv_path", path, "../common/commands.csv");
+	node.param<std::string>("voice_recognition/cmd_csv_path", path, "../common/commands.csv");
+	std::cout << path.c_str() << std::endl;
 	//voiceRecPub = node.advertise<std_msgs::String>("/recognizer/output", 1000);
 
 	VoiceRecognition* voiceRec = new VoiceRecognition();
 	PXCUtility* pxcUtility = voiceRec->pxcUtility_;
 	RosSpeaker speaker = voiceRec->speaker_;
+	voiceRec->voiceRecPub_ = node.advertise<std_msgs::String>("/recognizer/output", 1);
 	std::vector<std::wstring> deviceList = pxcUtility->deviceList;
 	std::vector<std::wstring> languageList = pxcUtility->languageList;
 	std::vector<std::wstring> moduleList = pxcUtility->moduleList;
@@ -177,7 +179,7 @@ int _tmain(int argc, char** argv)
 	VoiceCommands& voiceCmds = voiceRec->voiceCmds_;
 	voiceCmds.loadCsvFile(path);
 	std::string str = boost::lexical_cast<string>(voiceCmds.cmds.size()) + "条命令加载成功!";
-	//Sleep(1000);
+	Sleep(1000);
 	speaker.speak("语音识别系统启动...");
 	speaker.speak(str.c_str());
 	std::vector<std::wstring> cmds = voiceCmds.getWCommands();

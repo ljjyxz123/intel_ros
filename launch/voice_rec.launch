@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="intel_ros" type="voice_rec" name="voice_recognition"  output="screen">
+	<param name="cmd_csv_path" type="string" value="D:/ros_ws/src/intel_ros/common/commands.csv" />
+  </node>
+</launch>
