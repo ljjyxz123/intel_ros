@@ -137,9 +137,12 @@ int _tmain(int argc, char** argv)
 {
 	ros::init(argc, argv, "voice_recognition");
 	ros::NodeHandle node;
+	ros::NodeHandle ph("~");
 	std::string path;
-	node.param<std::string>("voice_recognition/cmd_csv_path", path, "../common/commands.csv");
+	ph.param<std::string>("cmd_csv_path", path, "../common/commands.csv");
 	std::cout << path.c_str() << std::endl;
+	int device_id = 0;
+	ph.param<int>("device_id", device_id, 0);
 	//voiceRecPub = node.advertise<std_msgs::String>("/recognizer/output", 1000);
 
 	VoiceRecognition* voiceRec = new VoiceRecognition();
@@ -153,7 +156,7 @@ int _tmain(int argc, char** argv)
 	int size = deviceList.size();
 	for (int i = 0; i < size; i++)
 	{
-		voiceRec->dealInfo(deviceList[i]);
+		voiceRec->dealInfo(L"设备[" + boost::lexical_cast<std::wstring>(i) + L"]: " + deviceList[i]);
 	}
 	
 	size = moduleList.size();
@@ -168,7 +171,7 @@ int _tmain(int argc, char** argv)
 		voiceRec->dealInfo(languageList[i]);
 	}
 
-	pxcUtility->selectDevice(0);
+	pxcUtility->selectDevice(device_id);
 	pxcUtility->selectModule(0);
 	pxcUtility->selectLanguage(1);
 
